@@ -10,7 +10,7 @@ router.register('post', PostViewSet)
 post_router =  NestedDefaultRouter(router, 'post', lookup = 'post')
 
 post_router.register('image', PostImageViewSet, basename='post-images')
-post_router.register('comments', CommentViewSet, basename='post-comments')
+post_router.register('comment', CommentViewSet, basename='post-comments')
 
 
 
