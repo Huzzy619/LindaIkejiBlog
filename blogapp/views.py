@@ -1,11 +1,17 @@
 from django.shortcuts import render
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from .models import *
-from .serializers import *
-from rest_framework.decorators import action
-from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.filters import SearchFilter, OrderingFilter
+
+from django_filters.rest_framework.backends import DjangoFilterBackend
+
+from .models import *
+from .paginators import PostPaginator
+from .serializers import *
+
 # Create your views here.
 
 
@@ -14,9 +20,14 @@ class PostViewSet (ModelViewSet):
 
     http_method_names = ['get', 'post', 'patch', 'head', 'options']
 
+    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    search_fields = ['author', 'title']
+    ordering_fields = ['date_created', 'author']
+    pagination_class = PostPaginator
+    
 
 
     def get_serializer_class(self):
